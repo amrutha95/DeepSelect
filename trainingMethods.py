@@ -1,5 +1,5 @@
 
-def train(self, model, loss_fn, optimizer, epochs):
+def train(model, loss_fn, optimizer, epochs):
 
 
   for i in range(epochs):

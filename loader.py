@@ -1,3 +1,5 @@
+from torch.utils.data import sampler
+
 class ChunkSampler(sampler.Sampler):
     """Samples elements sequentially from some offset. 
     Arguments:

@@ -1,6 +1,6 @@
 
-def train(model, loss_fn, optimizer, epochs):
-
+def train(model, loss_fn, optimizer, epochs, train_loader):
+  
   for i in range(epochs):
       model.train()
       epoch_loss = 0

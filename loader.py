@@ -1,4 +1,12 @@
-from torch.utils.data import sampler
+
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torch.nn.functional as F
+
+from torch.autograd import Variable
+from torch.utils.data import DataLoader
+from torchvision import datasets, transforms
 
 class ChunkSampler(sampler.Sampler):
     """Samples elements sequentially from some offset. 

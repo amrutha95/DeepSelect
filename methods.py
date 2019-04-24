@@ -14,13 +14,13 @@ if torch.cuda.is_available():
   dtype = torch.cuda.FloatTensor
   long_dtype = torch.cuda.LongTensor
   
-def train(model, loss_fn, optimizer, epochs, loaders):
+def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1):
   train_loader = loaders['train_loader']
   for i in range(epochs):
       model.train()
       epoch_loss = 0
       epoch_acc = 0
-      functioning = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      #functioning = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       for (x, y) in train_loader:
           x = Variable(x).type(dtype)
           y = Variable(y).type(torch.cuda.LongTensor)
@@ -30,11 +30,12 @@ def train(model, loss_fn, optimizer, epochs, loaders):
 
           indexes = torch.arange(class_number * 100, (class_number + 1) * 100).cuda()
           to_increase = torch.index_select(middle, 1, indexes)        
+          
+          
+          #functioning[class_number] += torch.mean(torch.abs(to_increase)) - torch.mean(torch.abs(middle))
 
-          functioning[class_number] += torch.mean(torch.abs(to_increase)) - torch.mean(torch.abs(middle))
-
-          loss = loss_fn(preds, y) - 0.1 * (torch.mean(torch.abs(to_increase)) + torch.mean(torch.abs(middle)))
-
+          #loss = loss_fn(preds, y) - 0.1 * (torch.mean(torch.abs(to_increase)) + torch.mean(torch.abs(middle)))
+          loss = loss_fn(preds,y) + tuning * F.kl_div(torch.abs(to_increase), torch.abs(middle))
           epoch_acc += (torch.max(preds, 1)[1] == y).sum().data.item()
           epoch_loss += loss.data.item()
 
@@ -44,9 +45,9 @@ def train(model, loss_fn, optimizer, epochs, loaders):
 
       print("Mean Loss for epoch {} is {}".format(i+1, epoch_loss))
       print("Training Acc: {}".format(epoch_acc / 60000))
-      print("Functioning: {}".format(functioning))
+      #print("Functioning: {}".format(functioning))
     
-def test(model, loader):
+def test(loader):
   correct = 0
   total = 0
   with torch.no_grad():

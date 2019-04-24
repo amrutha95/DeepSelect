@@ -38,18 +38,18 @@ def CIFAR10_loader(batch_size=16):
                          transform=transforms.Compose([
                              transforms.ToTensor(),
                              normalize
-                         ])), batch_size=128, sampler=ChunkSampler(NUM_TRAIN, 0))
+                         ])), batch_size, sampler=ChunkSampler(NUM_TRAIN, 0))
 
   val_loader = DataLoader(datasets.CIFAR10('../data', train=True, download=True,
                          transform=transforms.Compose([
                              transforms.ToTensor(),
                              normalize
-                         ])), batch_size=128, sampler=ChunkSampler(NUM_VAL, NUM_TRAIN))
+                         ])), batch_size, sampler=ChunkSampler(NUM_VAL, NUM_TRAIN))
 
   test_loader = DataLoader(datasets.CIFAR10('../data', train=False, transform=transforms.Compose([
                          transforms.ToTensor(),
                          normalize
-                         ])), batch_size=128, shuffle=False)
+                         ])), batch_size, shuffle=False)
 
   loaders = {'train_loader':train_loader, 'test_loader': test_loader, 'val_loader':val_loader}
   return loaders

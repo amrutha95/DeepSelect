@@ -7,6 +7,13 @@ from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
+dtype = torch.FloatTensor
+long_dtype = torch.LongTensor
+
+if torch.cuda.is_available():
+  dtype = torch.cuda.FloatTensor
+  long_dtype = torch.cuda.LongTensor
+  
 def train(model, loss_fn, optimizer, epochs, loaders):
   train_loader = loaders['train_loader']
   for i in range(epochs):

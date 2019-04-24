@@ -47,7 +47,7 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1):
       print("Training Acc: {}".format(epoch_acc / 60000))
       #print("Functioning: {}".format(functioning))
     
-def test(loader):
+def test(model, loader):
   correct = 0
   total = 0
   with torch.no_grad():

@@ -1,4 +1,12 @@
-#import torch
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torch.nn.functional as F
+
+from torch.autograd import Variable
+from torch.utils.data import DataLoader
+from torchvision import datasets, transforms
+
 def train(model, loss_fn, optimizer, epochs, loaders):
   train_loader = loaders['train_loader']
   for i in range(epochs):

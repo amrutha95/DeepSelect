@@ -40,7 +40,7 @@ def CIFAR10_loader():
                              normalize
                          ])), batch_size=128, sampler=ChunkSampler(NUM_TRAIN, 0))
 
-  test_loader = DataLoader(datasets.CIFAR10('../data', train=True, download=True,
+  val_loader = DataLoader(datasets.CIFAR10('../data', train=True, download=True,
                          transform=transforms.Compose([
                              transforms.ToTensor(),
                              normalize

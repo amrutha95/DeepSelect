@@ -13,33 +13,33 @@ long_dtype = torch.LongTensor
 if torch.cuda.is_available():
   dtype = torch.cuda.FloatTensor
   long_dtype = torch.cuda.LongTensor
-  
+
 def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1):
   train_loader = loaders['train_loader']
   val_loader = loaders['val_loader']
   for i in range(epochs):
-      for (x, y) in train_loader:
-          model.train()
-          x = Variable(x).type(dtype)
-          y = Variable(y).type(long_dtype)
+    for (x, y) in train_loader:
+        model.train()
+        x = Variable(x).type(dtype)
+        y = Variable(y).type(long_dtype)
 
-          middle, preds = model(x)
-          class_number = y.data.item()
+        middle, preds = model(x)
+        class_number = y.data.item()
 
-          indexes = torch.arange(class_number * 100, (class_number + 1) * 100).cuda()
-          to_increase = torch.index_select(middle, 1, indexes)        
-          
-          loss = loss_fn(preds,y) + tuning * F.kl_div(torch.abs(middle), torch.abs(to_increase))
-      
-          optimizer.zero_grad()
-          loss.backward()
-          optimizer.step()
+        indexes = torch.arange(class_number * 100, (class_number + 1) * 100).cuda()
+        to_increase = torch.index_select(middle, 1, indexes)
 
-     train_acc = test(model, train_loader)
-     print("Training accuracy for epoch {} is {}".format(i + 1, train_acc))
-     val_acc = test(model, val_loader)
-     print("Validation accuracy for epoch {} is {}".format(i + 1, val_acc))
-    
+        loss = loss_fn(preds,y) + tuning * F.kl_div(torch.abs(middle), torch.abs(to_increase))
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+    train_acc = test(model, train_loader)
+    print("Training accuracy for epoch {} is {}".format(i + 1, train_acc))
+    val_acc = test(model, val_loader)
+    print("Validation accuracy for epoch {} is {}".format(i + 1, val_acc))
+
 def test(model, loader):
   correct = 0
   total = 0
@@ -55,4 +55,3 @@ def test(model, loader):
           correct += (predicted == labels).sum().item()
 
   return 100 * correct / total
-

@@ -26,10 +26,11 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1):
         middle, preds = model(x)
         class_number = y.data.item()
 
-        indexes = torch.arange(class_number * 100, (class_number + 1) * 100).cuda()
-        to_increase = torch.index_select(middle, 1, indexes)
-
-        loss = loss_fn(preds,y) + tuning * F.kl_div(torch.abs(middle), torch.abs(to_increase))
+        indexes = torch.arange(class_number * 100, (class_number + 1) * 100)
+        template = torch.zeros((1000)).type(dtype)
+        template[indexes] = 1.0
+        
+        loss = loss_fn(preds,y) + tuning * F.kl_div(torch.abs(middle), torch.abs(template))
 
         optimizer.zero_grad()
         loss.backward()

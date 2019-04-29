@@ -30,7 +30,7 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1):
         template = torch.zeros((1000)).type(dtype)
         template[indexes] = 1.0
         
-        loss = loss_fn(preds,y) #+ tuning * F.kl_div(torch.abs(middle), torch.abs(template))
+        loss = loss_fn(preds,y) + tuning * F.kl_div(torch.abs(middle), torch.abs(template))
 
         optimizer.zero_grad()
         loss.backward()

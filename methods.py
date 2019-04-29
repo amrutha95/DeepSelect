@@ -50,8 +50,7 @@ def test(model, loader):
           images, labels = data
           images = Variable(images).type(dtype)
           labels = Variable(labels).type(long_dtype)
-          outputs = model(images)
-          print(outputs)
+          _, outputs = model(images)
           _, predicted = torch.max(outputs.data, 1)
           total += labels.size(0)
           correct += (predicted == labels).sum().item()

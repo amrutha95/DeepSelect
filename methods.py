@@ -50,7 +50,9 @@ def test(model, loader):
           images, labels = data
           images = Variable(images).type(dtype)
           labels = Variable(labels).type(long_dtype)
-          _, outputs = model(images)
+          outputs = model(images)
+          if type(outputs) is tuple:  
+            outputs = outputs[1]
           _, predicted = torch.max(outputs.data, 1)
           total += labels.size(0)
           correct += (predicted == labels).sum().item()

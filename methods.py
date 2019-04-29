@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
-import pdb
+
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
@@ -51,7 +51,7 @@ def test(model, loader):
           images = Variable(images).type(dtype)
           labels = Variable(labels).type(long_dtype)
           outputs = model(images)
-          pdb.set_trace()
+          print(outputs)
           _, predicted = torch.max(outputs.data, 1)
           total += labels.size(0)
           correct += (predicted == labels).sum().item()

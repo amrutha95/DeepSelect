@@ -56,7 +56,7 @@ def test(model, loader):
           images = Variable(images).type(dtype)
           labels = Variable(labels).type(long_dtype)
           outputs = model(images)
-          if type(outputs) is tuple:  
+          if type(outputs) is tuple:                                      #If working with our modified ResNet  
             outputs = outputs[1]
           _, predicted = torch.max(outputs.data, 1)
           total += labels.size(0)

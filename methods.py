@@ -31,9 +31,10 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1):
         template[indexes] = 1.0
         
         
-        #middle_layer = torch.log(torch.abs(middle)).type(dtype)
+        middle_layer = torch.log(torch.abs(middle)).type(dtype)
         loss1 = loss_fn(preds,y)                                          #Default = CrossEntropyLoss
-        loss2 = F.kl_div(torch.abs(middle),torch.abs(template))          #KL divergence loss (MAKE INPUT LOG-SOFTMAX)
+        loss2 = F.kl_div(middle_layer, torch.abs(template))
+        #loss2 = F.kl_div(torch.abs(middle),torch.abs(template))          #KL divergence loss (MAKE INPUT LOG-SOFTMAX)
         
         print(loss2)
         

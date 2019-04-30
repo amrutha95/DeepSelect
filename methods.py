@@ -33,7 +33,7 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1):
         loss1 = loss_fn(preds,y)                                          #Default = CrossEntropyLoss
         loss2 = F.kl_div(torch.abs(middle), torch.abs(template))          #KL divergence loss (MAKE INPUT LOG-SOFTMAX)
         
-        print(loss1, loss2)
+        #print(loss1, loss2)
         
         loss = loss1 + tuning * loss2
         

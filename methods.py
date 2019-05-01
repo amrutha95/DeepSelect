@@ -51,7 +51,6 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, neurons_per_cl
     
     train_acc = test(model, train_loader)
     print("Training accuracy for epoch {} is {}".format(i + 1, train_acc))
-    print("Tuning {}".format(tuning))
     
     print("Training loss (Cross Entropy) is {}".format(epoch_loss_acc))
     print("Training loss (KL divergence) is {}".format(epoch_loss_kl))

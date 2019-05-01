@@ -14,9 +14,14 @@ if torch.cuda.is_available():
   dtype = torch.cuda.FloatTensor
   long_dtype = torch.cuda.LongTensor
 
-def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1):
-  train_loader = loaders['train_loader']
-  val_loader = loaders['val_loader']
+def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, test_mode=False):
+  
+  if test_mode:                                         #Train & Test on the validation set to get an idea if the method works
+    train_loader = loaders['val_loader']
+  else:
+    train_loader = loaders['train_loader']
+    val_loader = loaders['val_loader']
+    
   for i in range(epochs):
     for (x, y) in train_loader:
         model.train()
@@ -40,11 +45,13 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-
+    
     train_acc = test(model, train_loader)
     print("Training accuracy for epoch {} is {}".format(i + 1, train_acc))
-    val_acc = test(model, val_loader)
-    print("Validation accuracy for epoch {} is {}".format(i + 1, val_acc))
+    
+    if test_mode == False:
+      val_acc = test(model, val_loader)
+      print("Validation accuracy for epoch {} is {}".format(i + 1, val_acc))
 
 def test(model, loader):
   correct = 0

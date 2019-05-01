@@ -1,13 +1,16 @@
+import visualisation
+import numpy as np
+
 import matplotlib.pyplot as plt
 import torch
 import numpy as np
 
-def visualise(middle, predicted_class, image):
-  plt.imshow(image)
+def visualise(middle, predicted_class, neurons_per_class=100):
   middle_np = torch.abs(middle).data.cpu().numpy().squeeze()
   plt.figure()
   plt.plot(middle_np)
-  ones = np.zeros((1000))
-  ones[predicted_class * 100:(predicted_class + 1)* 100] = 1.0
+  ones = np.zeros((10 * neurons_per_class))
+  ones[predicted_class * neurons_per_class:(predicted_class + 1)* neurons_per_class] = 1.0
+  
   plt.figure()
   plt.plot(ones)

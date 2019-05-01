@@ -7,6 +7,6 @@ def visualise(middle, predicted_class):
   plt.figure()
   plt.plot(middle_np)
   ones = np.zeros((1000))
-  ones[predicted * 100:(predicted + 1)* 100] = 1.0
+  ones[predicted_class * 100:(predicted_class + 1)* 100] = 1.0
   plt.figure()
   plt.plot(ones)

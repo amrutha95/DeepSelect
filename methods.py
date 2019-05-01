@@ -14,7 +14,7 @@ if torch.cuda.is_available():
   dtype = torch.cuda.FloatTensor
   long_dtype = torch.cuda.LongTensor
 
-def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, test_mode=False):
+def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, neurons_per_class=100, test_mode=False):
   
   if test_mode:                                         #Train & Test on the validation set to get an idea if the method works
     train_loader = loaders['val_loader']
@@ -33,7 +33,7 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, test_mode=Fals
         middle, preds = model(x)
         class_number = y.data.item()
 
-        indexes = torch.arange(class_number * 100, (class_number + 1) * 100)
+        indexes = torch.arange(class_number * neurons_per_class, (class_number + 1) * neurons_per_class)
         template = torch.zeros((1000)).type(dtype)
         template[indexes] = 1.0
         

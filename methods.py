@@ -40,7 +40,7 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, test_mode=Fals
         loss2 = F.kl_div(middle_layer, template, reduction='sum')
         #loss2 = F.kl_div(torch.abs(middle),torch.abs(template))          #KL divergence loss (MAKE INPUT LOG-SOFTMAX)
         
-        loss = loss1 + tuning * loss2
+        loss = loss1 #+ tuning * loss2
         
         optimizer.zero_grad()
         loss.backward()

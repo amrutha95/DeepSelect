@@ -23,6 +23,8 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, test_mode=Fals
     val_loader = loaders['val_loader']
     
   for i in range(epochs):
+    epoch_loss_acc = 0
+    epoch_loss_kl = 0
     for (x, y) in train_loader:
         model.train()
         x = Variable(x).type(dtype)
@@ -34,10 +36,12 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, test_mode=Fals
         indexes = torch.arange(class_number * 100, (class_number + 1) * 100)
         template = torch.zeros((1000)).type(dtype)
         template[indexes] = 1.0
-       
+        
         middle_layer = torch.log(middle + 0.01).type(dtype)
         loss1 = loss_fn(preds,y)                                          #Default = CrossEntropyLoss
         loss2 = F.kl_div(middle_layer, template, reduction='sum')
+        epoch_loss_acc += loss1.data.item()
+        epoch_loss_kl += loss2.data.item()
         
         loss = loss1 + tuning * loss2
         
@@ -47,6 +51,9 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, test_mode=Fals
     
     train_acc = test(model, train_loader)
     print("Training accuracy for epoch {} is {}".format(i + 1, train_acc))
+    
+    print("Training loss (Cross Entropy) is {}".format(epoch_loss_acc))
+    print("Training loss (KL divergence) is {}".format(epoch_loss_kl))
     
     if test_mode == False:
       val_acc = test(model, val_loader)

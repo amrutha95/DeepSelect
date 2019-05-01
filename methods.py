@@ -39,7 +39,7 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, test_mode=Fals
         
         middle_layer = torch.log(middle + 0.01).type(dtype)
         loss1 = loss_fn(preds,y)                                          #Default = CrossEntropyLoss
-        loss2 = F.kl_div(middle_layer, template, reduction='sum')
+        loss2 = F.kl_div(middle_layer, template, reduction='sum').sum()
         epoch_loss_acc += loss1.data.item()
         epoch_loss_kl += loss2.data.item()
         

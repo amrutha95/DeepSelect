@@ -34,7 +34,7 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, neurons_per_cl
         class_number = y.data.item()
 
         indexes = torch.arange(class_number * neurons_per_class, (class_number + 1) * neurons_per_class)
-        template = torch.zeros((10 * neurons_per_class)).type(dtype)
+        template = torch.zeros((10 * neurons_per_class)).type(dtype)      #CIFAR-10 specific
         template[indexes] = 1.0
         
         middle_layer = torch.log(middle + 0.01).type(dtype)

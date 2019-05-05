@@ -31,7 +31,7 @@ def CIFAR10_loader(batch_size=16):
 
 
   NUM_TRAIN = 49000
-  NUM_VAL = 10000
+  NUM_VAL = 10000  #Change this
 
   train_loader = DataLoader(datasets.CIFAR10('../data', train=True, download=True,
                          transform=transforms.Compose([
@@ -43,7 +43,7 @@ def CIFAR10_loader(batch_size=16):
                          transform=transforms.Compose([
                              transforms.ToTensor(),
                              normalize
-                         ])), batch_size, sampler=ChunkSampler(NUM_VAL, NUM_TRAIN))
+                         ])), batch_size, sampler=ChunkSampler(NUM_VAL, 0)) #Change 2nd arg to NUM_TRAIN
 
   test_loader = DataLoader(datasets.CIFAR10('../data', train=False, transform=transforms.Compose([
                          transforms.ToTensor(),

@@ -30,7 +30,6 @@ def CIFAR10_loader(batch_size=16):
                                      std=[0.229, 0.224, 0.225])
 
 
-
   NUM_TRAIN = 49000
   NUM_VAL = 10000
 

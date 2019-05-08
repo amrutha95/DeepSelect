@@ -92,4 +92,4 @@ def test_KL(model, loader, neurons_per_class):
       middle = model(images)         
       kl_div_sum += F.kl_div(middle, template, reduction='sum').sum()
       total += label.size(0)
-return kl_div_sum/total
+  return kl_div_sum/total

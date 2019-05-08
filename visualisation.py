@@ -26,7 +26,7 @@ def visualise(x, middle, neurons_per_class=100):
     kl_div = F.kl_div(middle_layer, template, reduction='sum').sum()
     if i == 0:
       min_kl = kl_div
-    else if kl_div < min_kl:
+    elif kl_div < min_kl:
       min_kl = kl_div
       min_class = i
      

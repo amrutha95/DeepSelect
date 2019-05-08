@@ -35,7 +35,7 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, neurons_per_cl
 
         indexes = torch.arange(class_number * neurons_per_class, (class_number + 1) * neurons_per_class)
         template = torch.zeros((10 * neurons_per_class)).type(dtype)      #CIFAR-10 specific
-        template[indexes] = 1.0
+        template[indexes] = 1.0/neurons_per_class
        
         middle=middle/torch.sum(middle)
         middle_layer = torch.log(middle + 0.01).type(dtype)
@@ -89,8 +89,9 @@ def test_KL(model, loader, neurons_per_class):
       class_number = labels.data.item()
       indexes = torch.arange(class_number * neurons_per_class, (class_number + 1) * neurons_per_class)
       template = torch.zeros((10 * neurons_per_class)).type(dtype)      #CIFAR-10 specific
-      template[indexes] = 1.0
-      middle = model(images)         
+      template[indexes] = 1.0 / neurons_per_class
+      middle = model(images)    
+      middle=middle/torch.sum(middle)
       middle_layer = torch.log(middle + 0.01).type(dtype)
       kl_div_sum += F.kl_div(middle_layer, template, reduction='sum').sum()
       total += labels.size(0)

@@ -6,7 +6,7 @@ import torch
 import numpy as np
 
 class_mapping = {0:"Airplane", 1:"Automobile", 2:"Bird", 3:"Cat", 4:"Deer", 5:"Dog", 6:"Frog", 7:"Horse", 8:"Ship", 9:"Truck"}
-
+dtype = torch.cuda.FloatTensor
 def visualise(x, middle, neurons_per_class=100):
   x = x.squeeze().data.cpu().numpy().transpose(1, 2, 0)
   plt.imshow(x)

@@ -77,19 +77,19 @@ def test(model, loader):
 
   return 100 * correct / total
 
-  def test_KL(model, loader, neurons_per_class):
-    kl_div_sum = 0 
-    total = 0
-    model.eval()
-    with torch.no_grad():
-      for data in loader:
-        images, labels = data
-        images = Variable(images).type(dtype)
-        class_number = Variable(labels).type(long_dtype)
-        indexes = torch.arange(class_number * neurons_per_class, (class_number + 1) * neurons_per_class)
-        template = torch.zeros((10 * neurons_per_class)).type(dtype)      #CIFAR-10 specific
-        template[indexes] = 1.0
-        middle = model(images)         
-        kl_div_sum += F.kl_div(middle, template, reduction='sum').sum()
-        total += label.size(0)
-  return kl_div_sum/total
+def test_KL(model, loader, neurons_per_class):
+  kl_div_sum = 0 
+  total = 0
+  model.eval()
+  with torch.no_grad():
+    for data in loader:
+      images, labels = data
+      images = Variable(images).type(dtype)
+      class_number = Variable(labels).type(long_dtype)
+      indexes = torch.arange(class_number * neurons_per_class, (class_number + 1) * neurons_per_class)
+      template = torch.zeros((10 * neurons_per_class)).type(dtype)      #CIFAR-10 specific
+      template[indexes] = 1.0
+      middle = model(images)         
+      kl_div_sum += F.kl_div(middle, template, reduction='sum').sum()
+      total += label.size(0)
+return kl_div_sum/total

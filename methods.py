@@ -49,14 +49,14 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, neurons_per_cl
         loss.backward()
         optimizer.step()
     
-    train_acc = test_KL(model, train_loader)
+    train_acc = test_KL(model, train_loader, neurons_per_class)
     print("Training accuracy for epoch {} is {}".format(i + 1, train_acc))
     
     #print("Training loss (Cross Entropy) is {}".format(epoch_loss_acc))
     print("Training loss (KL divergence) is {}".format(epoch_loss_kl))
     
     if test_mode == False:
-      val_acc = test_KL(model, val_loader)
+      val_acc = test_KL(model, val_loader, neurons_per_class)
       print("Validation accuracy for epoch {} is {}".format(i + 1, val_acc))
 
 def test(model, loader):

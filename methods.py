@@ -36,7 +36,8 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, neurons_per_cl
         indexes = torch.arange(class_number * neurons_per_class, (class_number + 1) * neurons_per_class)
         template = torch.zeros((10 * neurons_per_class)).type(dtype)      #CIFAR-10 specific
         template[indexes] = 1.0
-        
+       
+        middle=middle/torch.sum(middle)
         middle_layer = torch.log(middle + 0.01).type(dtype)
         #loss1 = loss_fn(preds,y)                                          #Default = CrossEntropyLoss
         loss2 = F.kl_div(middle_layer, template, reduction='sum').sum()

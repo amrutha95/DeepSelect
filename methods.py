@@ -85,7 +85,7 @@ def test_KL(model, loader, neurons_per_class):
     for data in loader:
       images, labels = data
       images = Variable(images).type(dtype)
-      class_number = Variable(labels).type(long_dtype)
+      class_number = labels.data.item()
       indexes = torch.arange(class_number * neurons_per_class, (class_number + 1) * neurons_per_class)
       template = torch.zeros((10 * neurons_per_class)).type(dtype)      #CIFAR-10 specific
       template[indexes] = 1.0

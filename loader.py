@@ -31,7 +31,7 @@ def CIFAR10_loader(batch_size=16):
 
 
   NUM_TRAIN = 49000
-  NUM_VAL = 10000  #Change this
+  NUM_VAL = 1000  #Change this
 
   train_loader = DataLoader(datasets.CIFAR10('../data', train=True, download=True,
                          transform=transforms.Compose([

@@ -66,12 +66,16 @@ def attack_bestcase(model, test_loader, epsilon, adv_examples_needed, max_iterat
 
         data = fgsm_attack(data, epsilon, data_grad)
         output = model(data)
+        if type(output) is tuple:
+          middle, output = output
         final_pred = output.max(1, keepdim=True)[1]
         
         count = 0
         while(final_pred.item() == target.item() and count < 10000):
           data = fgsm_attack(data, epsilon, data_grad)
           output = model(data)
+          if type(output) is tuple:
+            middle, output = output
           final_pred = output.max(1, keepdim=True)[1]
           count = count + 1
           

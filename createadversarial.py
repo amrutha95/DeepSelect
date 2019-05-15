@@ -25,7 +25,7 @@ def fgsm_attack(image, epsilon, data_grad):
     # Return the perturbed image
     return perturbed_image
 
-def attack(model, test_loader, epsilon):
+def attack(model, test_loader, epsilon, adv_examples_needed, max_iterations, to_print=False):
     # Accuracy counter
     correct = 0
     adv_examples = []
@@ -73,14 +73,15 @@ def attack(model, test_loader, epsilon):
           final_pred = output.max(1, keepdim=True)[1]
           count = count + 1
           
-        if len(adv_examples) < 100 and final_pred.item() != target.item():
-          if count < 10:
-            print('{} done ({}).'.format(len(adv_examples), count))
+        if len(adv_examples) < adv_examples_needed and final_pred.item() != target.item():
+          if count < max_iterations:
+            if to_print:
+              print('{} done. Initial prediction: {}, Final prediction: {} (count: {}).'.format(len(adv_examples), init_pred, final_pred, count))
             adv_ex = data.squeeze().detach().cpu().numpy()
             adv_examples.append( (oridata, init_pred.item(), final_pred.item(), adv_ex) )  #original data, correct prediction, final prediction, adversarial example generated
           else:
             pass
-        elif len(adv_examples) >= 100:
+        elif len(adv_examples) >= adv_examples_needed:
           return adv_examples
 
     # Return the accuracy and an adversarial example

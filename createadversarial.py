@@ -140,10 +140,10 @@ def attack_worstcase(model, test_loader, epsilon, adv_examples_needed, max_itera
             print('{} done. Initial prediction: {}, Final prediction: {} (count: {}).'.format(len(adv_examples), init_pred, final_pred, count))
           adv_ex = data.squeeze().detach().cpu().numpy()
           adv_examples.append( (oridata, init_pred.item(), final_pred.item(), adv_ex) )  #original data, correct prediction, final prediction, adversarial example generated
-        else:
-          pass
         elif len(adv_examples) >= adv_examples_needed:
           return adv_examples
+        else:
+          pass
 
     # Return the accuracy and an adversarial example
     return adv_examples

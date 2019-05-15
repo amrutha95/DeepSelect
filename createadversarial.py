@@ -1,5 +1,20 @@
 #Creating adversarial examples
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torch.nn.functional as F
 
+from torch.autograd import Variable
+from torch.utils.data import DataLoader
+from torchvision import datasets, transforms
+
+dtype = torch.FloatTensor
+long_dtype = torch.LongTensor
+
+if torch.cuda.is_available():
+  dtype = torch.cuda.FloatTensor
+  long_dtype = torch.cuda.LongTensor
+    
 def fgsm_attack(image, epsilon, data_grad):
     # Collect the element-wise sign of the data gradient
     s = data_grad.sign()

@@ -42,7 +42,7 @@ def attack_bestcase(model, test_loader, epsilon, adv_examples_needed, max_iterat
         # Forward pass the data through the model
         model.eval()
         output = model(data)
-        if type(outout) is tuple:
+        if type(output) is tuple:
           middle, output = output
         worstclass = output.min(1, keepdim=True)[1][0]
         init_pred = output.max(1, keepdim=True)[1] # get the index of the max log-probability
@@ -106,7 +106,7 @@ def attack_worstcase(model, test_loader, epsilon, adv_examples_needed, max_itera
         # Forward pass the data through the model
         model.eval()
         output = model(data)
-        if type(outout) is tuple:
+        if type(output) is tuple:
           middle, output = output
         worstclass = output.min(1, keepdim=True)[1][0]
         init_pred = output.max(1, keepdim=True)[1] # get the index of the max log-probability

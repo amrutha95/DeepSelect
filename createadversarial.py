@@ -130,12 +130,16 @@ def attack_worstcase(model, test_loader, epsilon, adv_examples_needed, max_itera
 
         data = fgsm_attack(data, epsilon, data_grad)
         output = model(data)
+        if type(output) is tuple:
+          middle, output = output
         final_pred = output.max(1, keepdim=True)[1]
         
         count = 0
         while(final_pred.item() != worstclass.item() and count < max_iterations):
           data = fgsm_attack(data, epsilon, data_grad)
           output = model(data)
+          if type(output) is tuple:
+            middle, output = output
           final_pred = output.max(1, keepdim=True)[1]
           count = count + 1
           

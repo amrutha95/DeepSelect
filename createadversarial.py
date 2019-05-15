@@ -85,13 +85,3 @@ def attack(model, test_loader, epsilon):
 
     # Return the accuracy and an adversarial example
     return adv_examples
-  
-adv_examples = test(model, loaders['test_loader'], 0.1)
-adv_example = adv_examples[3]
-
-
-plt.imshow(adv_example[0].transpose(1, 2, 0))
-plt.title("Prediction: {}".format(adv_example[1]))
-plt.figure()
-plt.imshow(adv_example[3].transpose(1, 2, 0))
-plt.title("Adversarial Prediction: {}".format(adv_example[2]))

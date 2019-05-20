@@ -82,12 +82,12 @@ def train_nonkl(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, neurons_
         template[indexes] = 1.0 / neurons_per_class
         
         loss1 = loss_fn(preds,y)                                          #Default = CrossEntropyLoss
-        loss2 = - torch.mean(middle[indexes])
-        loss3 = torch.mean(middle)
+        loss2 = - tuning * torch.mean(middle[indexes]) + torch.mean(middle[:])
+        kl_loss = nn.KLDivLoss(size_average=False)(middle.log() , template)
         epoch_loss_acc += loss1.data.item()
-        epoch_loss_kl += nn.KLDivLoss(size_average=False)(middle.log() , template).data.item()
+        epoch_loss_kl += kl_loss.data.item()
         
-        loss = loss1 + tuning * loss2 + loss3
+        loss = loss1 + loss2
         
         optimizer.zero_grad()
         loss.backward()

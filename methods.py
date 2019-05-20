@@ -83,7 +83,7 @@ def train_nonkl(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, neurons_
         template[indexes] = 1.0 / neurons_per_class
         
         loss1 = loss_fn(preds,y)                                          #Default = CrossEntropyLoss
-        loss2 = - tuning * (torch.mean(torch.abs(to_increase))) + torch.mean(middle)
+        loss2 = - tuning * (torch.mean(to_increase) + torch.mean(middle))
                                                         
         epoch_loss_acc += loss1.data.item()
         

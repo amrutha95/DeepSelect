@@ -57,6 +57,51 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, neurons_per_cl
     if test_mode == False:
       val_acc = test(model, val_loader)
       print("Validation accuracy for epoch {} is {}".format(i + 1, val_acc))
+      
+def train_nonkl(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, neurons_per_class=100, test_mode=False):
+  
+  if test_mode:                                         #Train & Test on the validation set to get an idea if the method works
+    train_loader = loaders['val_loader']
+  else:
+    train_loader = loaders['train_loader']
+    val_loader = loaders['val_loader']
+    
+  for i in range(epochs):
+    epoch_loss_acc = 0
+    epoch_loss_kl = 0
+    for (x, y) in train_loader:
+        model.train()
+        x = Variable(x).type(dtype)
+        y = Variable(y).type(long_dtype)
+
+        middle, preds = model(x)
+        class_number = y.data.item()
+
+        indexes = torch.arange(class_number * neurons_per_class, (class_number + 1) * neurons_per_class)
+        template = torch.zeros((10 * neurons_per_class)).type(dtype)      #CIFAR-10 specific
+        template[indexes] = 1.0 / neurons_per_class
+        
+        loss1 = loss_fn(preds,y)                                          #Default = CrossEntropyLoss
+        loss2 = - torch.mean(middle[indexes])
+        loss3 = torch.mean(middle)
+        epoch_loss_acc += loss1.data.item()
+        epoch_loss_kl += loss2.data.item()
+        
+        loss = loss1 + tuning * loss2 + loss3
+        
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+    
+    train_acc = test(model, train_loader)
+    print("Training accuracy for epoch {} is {}".format(i + 1, train_acc))
+    
+    print("Training loss (Cross Entropy) is {}".format(epoch_loss_acc))
+    print("Training loss (KL divergence) is {}".format(epoch_loss_kl))
+    
+    if test_mode == False:
+      val_acc = test(model, val_loader)
+      print("Validation accuracy for epoch {} is {}".format(i + 1, val_acc)) 
 
 def test(model, loader):
   correct = 0

@@ -85,7 +85,7 @@ def train_nonkl(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, neurons_
         loss2 = - torch.mean(middle[indexes])
         loss3 = torch.mean(middle)
         epoch_loss_acc += loss1.data.item()
-        epoch_loss_kl += loss2.data.item()
+        epoch_loss_kl += nn.KLDivLoss(size_average=False)(middle.log() , template).data.item()
         
         loss = loss1 + tuning * loss2 + loss3
         

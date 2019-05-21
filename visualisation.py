@@ -24,7 +24,7 @@ def visualise(x, middle, neurons_per_class=100):
   for i in np.arange(0,10):
     ones = np.zeros((10 * neurons_per_class))
     ones[i * neurons_per_class:(i + 1)* neurons_per_class] = 1.0
-    kl_div = F.kl_div(middle_layer, template, reduction='sum').sum()
+    kl_div = F.kl_div(middle_layer, ones, reduction='sum').sum()
     if i == 0:
       min_kl = kl_div
     elif kl_div < min_kl:

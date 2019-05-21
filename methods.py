@@ -89,7 +89,7 @@ def test_KL(model, loader, neurons_per_class):
       indexes = torch.arange(class_number * neurons_per_class, (class_number + 1) * neurons_per_class)
       template = torch.zeros((10 * neurons_per_class)).type(dtype)      #CIFAR-10 specific
       template[indexes] = 1.0 / neurons_per_class
-      middle = model(images)    
+      middle, _ = model(images)    
       kl_div_sum += nn.KLDivLoss(size_average=False)(middle.log(), template)
       total += labels.size(0)
   return kl_div_sum/total

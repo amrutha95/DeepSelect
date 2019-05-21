@@ -30,7 +30,7 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, neurons_per_cl
         x = Variable(x).type(dtype)
         y = Variable(y).type(long_dtype)
 
-        middle = model(x)
+        middle, _ = model(x)
         class_number = y.data.item()
 
         indexes = torch.arange(class_number * neurons_per_class, (class_number + 1) * neurons_per_class)

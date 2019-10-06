@@ -13,8 +13,39 @@ long_dtype = torch.LongTensor
 if torch.cuda.is_available():
   dtype = torch.cuda.FloatTensor
   long_dtype = torch.cuda.LongTensor
+  
+def train_kl(model, optimizer, epochs, loaders, neurons_per_class=100, test_mode=False):
+  
+  if test_mode:                                         #Train & Test on the validation set to get an idea if the method works
+    train_loader = loaders['val_loader']
+  else:
+    train_loader = loaders['train_loader']
+    val_loader = loaders['val_loader']
+    
+  for i in range(epochs):
+    epoch_loss = 0
+    for (x, y) in train_loader:
+        model.train()
+        x = Variable(x).type(dtype)
+        y = Variable(y).type(long_dtype)
 
-def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, neurons_per_class=100, test_mode=False):
+        middle, preds = model(x)
+        class_number = y.data.item()
+
+        indexes = torch.arange(class_number * neurons_per_class, (class_number + 1) * neurons_per_class)
+        template = torch.zeros((10 * neurons_per_class)).type(dtype)      #CIFAR-10 specific
+        template[indexes] = 1.0 / neurons_per_class
+        
+        loss = nn.KLDivLoss(size_average=False)(middle.log() , template)
+        epoch_loss += loss.data.item()
+               
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+    
+    print("Training loss (KL divergence) is {}".format(epoch_loss))
+    
+def train_from_scratch(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, neurons_per_class=100, test_mode=False):
   
   if test_mode:                                         #Train & Test on the validation set to get an idea if the method works
     train_loader = loaders['val_loader']
@@ -58,7 +89,7 @@ def train(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, neurons_per_cl
       val_acc = test(model, val_loader)
       print("Validation accuracy for epoch {} is {}".format(i + 1, val_acc))
       
-def train_nonkl(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, neurons_per_class=100, test_mode=False):
+def train_nonkl(model, optimizer, epochs, loaders, neurons_per_class=100, test_mode=False):
   
   if test_mode:                                         #Train & Test on the validation set to get an idea if the method works
     train_loader = loaders['val_loader']
@@ -67,8 +98,7 @@ def train_nonkl(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, neurons_
     val_loader = loaders['val_loader']
     
   for i in range(epochs):
-    epoch_loss_acc = 0
-    epoch_loss_kl = 0
+    epoch_loss = 0
     for (x, y) in train_loader:
         model.train()
         x = Variable(x).type(dtype)
@@ -82,27 +112,16 @@ def train_nonkl(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, neurons_
         template = torch.zeros((10 * neurons_per_class)).type(dtype)      #CIFAR-10 specific
         template[indexes] = 1.0 / neurons_per_class
         
-        loss1 = loss_fn(preds,y)                                          #Default = CrossEntropyLoss
-        loss2 = - tuning * (torch.mean(to_increase) - torch.mean(middle))
-                                                        
-        epoch_loss_acc += loss1.data.item()
-        
-        loss = loss1 + loss2
-        
+        loss = - tuning * (torch.mean(to_increase) - torch.mean(middle)) # Real loss
+        loss_kl = nn.KLDivLoss(size_average=False)(middle.log() , template) # Using as a proxy to measure effectiveness 
+        epoch_loss += loss_kl.data.item()
+          
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+        
+    print("Training loss (KL divergence) is {}".format(epoch_loss))
     
-    train_acc = test(model, train_loader)
-    print("Training accuracy for epoch {} is {}".format(i + 1, train_acc))
-    
-    print("Training loss (Cross Entropy) is {}".format(epoch_loss_acc))
-    print("Training loss (KL divergence) is {}".format(epoch_loss_kl))
-    
-    if test_mode == False:
-      val_acc = test(model, val_loader)
-      print("Validation accuracy for epoch {} is {}".format(i + 1, val_acc))   
-      
 def test(model, loader):
   correct = 0
   total = 0

@@ -112,7 +112,7 @@ def train_nonkl(model, optimizer, epochs, loaders, neurons_per_class=100, test_m
         template = torch.zeros((10 * neurons_per_class)).type(dtype)      #CIFAR-10 specific
         template[indexes] = 1.0 / neurons_per_class
         
-        loss = - tuning * (torch.mean(to_increase) - torch.mean(middle)) # Real loss
+        loss = - (torch.mean(to_increase) - torch.mean(middle)) # Real loss
         loss_kl = nn.KLDivLoss(size_average=False)(middle.log() , template) # Using as a proxy to measure effectiveness 
         epoch_loss += loss_kl.data.item()
           

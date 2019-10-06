@@ -34,7 +34,7 @@ def train_kl(model, optimizer, epochs, loaders, neurons_per_class=100, test_mode
 
         indexes = torch.arange(class_number * neurons_per_class, (class_number + 1) * neurons_per_class)
         template = torch.zeros((10 * neurons_per_class)).type(dtype)      #CIFAR-10 specific
-        template[indexes] = 1.0 / neurons_per_class
+        template[indexes] = 1.0
         
         loss = nn.KLDivLoss(size_average=False)(middle.log() , template)
         epoch_loss += loss.data.item()
@@ -66,7 +66,7 @@ def train_from_scratch(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, n
 
         indexes = torch.arange(class_number * neurons_per_class, (class_number + 1) * neurons_per_class)
         template = torch.zeros((10 * neurons_per_class)).type(dtype)      #CIFAR-10 specific
-        template[indexes] = 1.0 / neurons_per_class
+        template[indexes] = 1.0
         
         loss1 = loss_fn(preds,y)                                          #Default = CrossEntropyLoss
         loss2 = nn.KLDivLoss(size_average=False)(middle.log() , template)
@@ -110,7 +110,7 @@ def train_nonkl(model, optimizer, epochs, loaders, neurons_per_class=100, test_m
         indexes = torch.arange(class_number * neurons_per_class, (class_number + 1) * neurons_per_class).type(long_dtype)
         to_increase = torch.index_select(middle, 1, indexes)
         template = torch.zeros((10 * neurons_per_class)).type(dtype)      #CIFAR-10 specific
-        template[indexes] = 1.0 / neurons_per_class
+        template[indexes] = 1.0
         
         loss = - (torch.mean(to_increase) - torch.mean(middle)) # Real loss
         loss_kl = nn.KLDivLoss(size_average=False)(middle.log() , template) # Using as a proxy to measure effectiveness 

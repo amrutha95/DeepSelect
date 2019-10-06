@@ -4,4 +4,5 @@ Designed a KL-divergence based probe layer/side channel for inspection.
 Technologies: PyTorch
 
 [link to code](https://colab.research.google.com/drive/1Ujtkdz4lIOT_MVH3FtY7xcIgI7GwqLXf)
+
 [link to notes](https://docs.google.com/document/d/1Y9CBtaeEdS0gBJ9s1e5Gtse-CuQKeRaObA66zbi69Qo/edit?usp=sharing)

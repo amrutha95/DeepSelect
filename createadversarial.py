@@ -131,7 +131,7 @@ def attack_worstcase(model, test_loader, epsilon, adv_examples_needed, max_itera
 
         # Collect datagrad
         data_grad = data.grad.data
-        return data_grad
+        
         data = fgsm_attack(data, epsilon, data_grad)
         output = model(data)
         if type(output) is tuple:

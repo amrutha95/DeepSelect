@@ -26,8 +26,8 @@ class ChunkSampler(sampler.Sampler):
         return self.num_samples
         
 def CIFAR10_loader(batch_size=16):
-  normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                     std=[0.229, 0.224, 0.225])
+  #normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+  #                                   std=[0.229, 0.224, 0.225])
 
 
   NUM_TRAIN = 40000
@@ -35,19 +35,16 @@ def CIFAR10_loader(batch_size=16):
 
   train_loader = DataLoader(datasets.CIFAR10('../data', train=True, download=True,
                          transform=transforms.Compose([
-                             transforms.ToTensor(),
-                             normalize
+                             transforms.ToTensor()
                          ])), batch_size, sampler=ChunkSampler(NUM_TRAIN, 0))
 
   val_loader = DataLoader(datasets.CIFAR10('../data', train=True, download=True,
                          transform=transforms.Compose([
-                             transforms.ToTensor(),
-                             normalize
+                             transforms.ToTensor()
                          ])), batch_size, sampler=ChunkSampler(NUM_VAL, 0)) #Change 2nd arg to NUM_TRAIN
 
   test_loader = DataLoader(datasets.CIFAR10('../data', train=False, transform=transforms.Compose([
-                         transforms.ToTensor(),
-                         normalize
+                         transforms.ToTensor()
                          ])), batch_size, shuffle=False)
 
   loaders = {'train_loader':train_loader, 'test_loader': test_loader, 'val_loader':val_loader}

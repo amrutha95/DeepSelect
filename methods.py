@@ -14,13 +14,10 @@ if torch.cuda.is_available():
   dtype = torch.cuda.FloatTensor
   long_dtype = torch.cuda.LongTensor
   
-def train_kl(model, optimizer, epochs, loaders, neurons_per_class=100, test_mode=False):
+def train_kl(model, optimizer, epochs, loaders, neurons_per_class=100):
   
-  if test_mode:                                         #Train & Test on the validation set to get an idea if the method works
-    train_loader = loaders['val_loader']
-  else:
-    train_loader = loaders['train_loader']
-    val_loader = loaders['val_loader']
+  train_loader = loaders['train_loader']
+  val_loader = loaders['val_loader']
     
   for i in range(epochs):
     epoch_loss = 0
@@ -29,14 +26,18 @@ def train_kl(model, optimizer, epochs, loaders, neurons_per_class=100, test_mode
         x = Variable(x).type(dtype)
         y = Variable(y).type(long_dtype)
 
-        middle, preds = model(x)
+        preds, probes = model(x)
         class_number = y.data.item()
 
         indexes = torch.arange(class_number * neurons_per_class, (class_number + 1) * neurons_per_class)
         template = torch.zeros((10 * neurons_per_class)).type(dtype)      #CIFAR-10 specific
         template[indexes] = 1.0 / neurons_per_class
         
-        loss = nn.KLDivLoss(size_average=False)(middle.log() , template)
+        loss = torch.zeros(1)
+        
+        for middle in probes:
+          loss += nn.KLDivLoss(size_average=False)(middle.log(), template)
+          
         epoch_loss += loss.data.item()
                
         optimizer.zero_grad()

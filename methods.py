@@ -33,7 +33,7 @@ def train_kl(model, optimizer, epochs, loaders, neurons_per_class=100):
         template = torch.zeros((10 * neurons_per_class)).type(dtype)      #CIFAR-10 specific
         template[indexes] = 1.0 / neurons_per_class
         
-        loss = torch.zeros(1)
+        loss = torch.zeros(1).cuda()
         
         for middle in probes:
           loss += nn.KLDivLoss(size_average=False)(middle.log(), template)

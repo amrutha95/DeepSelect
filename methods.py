@@ -22,7 +22,6 @@ def train_kl(model, optimizer, epochs, loaders, neurons_per_class=100):
   for i in range(epochs):
     epoch_loss = 0
     for (x, y) in train_loader:
-        model.train()
         x = Variable(x).type(dtype)
         y = Variable(y).type(long_dtype)
 

@@ -22,6 +22,7 @@ def train_kl(model, optimizer, epochs, loaders, neurons_per_class=100):
     
   for i in range(epochs):
     epoch_loss = 0
+    probe_losses = [0, 0, 0, 0]
     for (x, y) in train_loader:
         x = Variable(x).type(dtype)
         y = Variable(y).type(long_dtype)
@@ -35,8 +36,10 @@ def train_kl(model, optimizer, epochs, loaders, neurons_per_class=100):
         
         loss = torch.zeros(1).cuda()
         
-        for middle in probes:
-          loss += nn.KLDivLoss(size_average=False)(middle.log(), template)
+        for e, middle in enumerate(probes):
+          temp = nn.KLDivLoss(size_average=False)(middle.log(), template)
+          probe_losses[e] += temp.data.item()
+          loss += temp
           
         epoch_loss += loss.data.item()
                
@@ -45,6 +48,7 @@ def train_kl(model, optimizer, epochs, loaders, neurons_per_class=100):
         optimizer.step()
     
     print("Training loss (KL divergence) is {}".format(epoch_loss))
+    print("Losses for individual probes: {}".format(probe_losses))
     
 def train_from_scratch(model, loss_fn, optimizer, epochs, loaders, tuning=0.1, neurons_per_class=100, test_mode=False):
   

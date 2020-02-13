@@ -17,8 +17,7 @@ if torch.cuda.is_available():
 def train_kl(model, optimizer, epochs, loaders, neurons_per_class=100):
   
   train_loader = loaders['train_loader']
-  model.eval()
-    
+  
   for i in range(epochs):
     epoch_loss = 0
     probe_losses = [0, 0, 0, 0]
